@@ -33,6 +33,45 @@ if(st.button )("Get Data"):
                                              low=data['Low'],
                                              close=data['Close'],
                                              name='Candlestick')])
+        fig.update_layout(title=f'{ticker} Candlestick Chart', xaxis_title='Date', yaxis_title='Price', xaxis_rangeslider_visible=False)
+
+        fig.add_trace(go.Bar(x=data.index, y=data['Volume'], name='Volume', marker_color='blue', opacity=0.3, yaxis='y2'))
+
+        fig.update_layout(yaxis2=dict(overlaying='y', side='right', title='Volume'), height=700)
+        st.plotly_chart(fig, use_container_width=True)
+
+        #technical indicators 
+        data['rsi'] = ta.momentum.RSIIndicator(data['Close'].rsi)
+        macd = ta.trend.MACD(data['Close'])
+        data['macd'] = macd.macd()
+        data['macd_signal'] = macd.macd_signal()
+        data['macd_diff'] = macd.macd_diff()
+
+        stoch = ta.momentum.StochasticOscillator(data['High'],data['low'],data['close'])
+        data['stoch_k'] =stoch.stoch()
+        data['stoch_d'] =stoch.stoch_signal()
+
+        bbands = ta.volatility.BollingerBands(data['CLose'])
+        data['bbands_upper'] = bbands.bollinger_hband()
+        data['bbands_middle'] =bbands.bollinger_mavg()
+        data['bbands_lower'] = bbands.bollinger_lband()
+
+        data['dpo'] = ta.trend.DPOIndicator(data['Close'].dpo())
+        dmi = ta.trend.ADXIndicator(high=data['High'],low =data['low'],close=data['close'],window=14)
+
+        data['adx'] = dmi.adx
+        data['dmi_pos'] = dmi.adx_pos()
+        data['dmi_neg'] = dmi.adx_neg()
+
+        data['cci'] =ta.trend.CCIIndicator(data['High'],low=data['Low'],close=data['Close'],window=14)
+        data['roc']=ta.momentum.ROCIndicator(data['Close'].roc())
+        
+
+
+
+
+
+
         
         
 
