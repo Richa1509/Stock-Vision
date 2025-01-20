@@ -1,0 +1,51 @@
+// this file defines development environment using docker
+{
+  "name": "Python 3",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  // this image defines a base docker image to use based on debian bullseye distribution
+  // the open file automatically opens the readme and main code file when the enviro starts 
+  // extensions install python and pyplane 
+  "image": "mcr.microsoft.com/devcontainers/python:1-3.11-bullseye",
+
+  "customizations": {
+    "codespaces": {
+      "openFiles": [
+        "README.md",
+        "ProjectAlpha.py"
+      ]
+    },
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ]
+    }
+  },
+  "updateContentCommand": "[ -f packages.txt ] && sudo apt update && sudo apt upgrade -y && sudo xargs apt install -y <packages.txt; [ -f requirements.txt ] && pip3 install --user -r requirements.txt; pip3 install --user streamlit; echo '✅ Packages installed and Requirements met'",
+  "postAttachCommand": {
+    "server": "streamlit run ProjectAlpha.py --server.enableCORS false --server.enableXsrfProtection false"
+  },
+  // CORS-> cross origin resource sharing 
+
+  "portsAttributes": {
+    "8501": {
+      "label": "Application",
+      "onAutoForward": "openPreview"
+    }
+  },
+  "forwardPorts": [
+    8501
+  ]
+}
+/*Summary:
+This configuration file sets up a Python development environment inside a Docker container with necessary tools, extensions, and commands to run a Streamlit app. It simplifies setting up and sharing a consistent development environment, which can be crucial for team projects or specific configurations.*/
+// streamlit -> open source python library to create and share custom web pages for machine learning ,, it is simple API to build interactive apps 
+// port 851 -> here the streamlit app lsitens for incoming http request by default 
+// docker container ->> it is a lightweight , standalone and executable software package that contains everything needed to run an application,,,,, basically this is used so that the app runs the same in devellopment , testing and production environments 
+
+// why use a .txt file??
+// list all the python pacakges dependencies that can be installed using pip
+// we could also have used the pipfile or pipfile.lock 
+
+
